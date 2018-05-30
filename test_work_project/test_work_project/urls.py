@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url
+from messages_app import views
 from django.urls import path
 from django.contrib.auth import views as  auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^ login / $', auth_views.login),
+    url(r'^$', views.empty_page, name='empty_page'),
 ]
