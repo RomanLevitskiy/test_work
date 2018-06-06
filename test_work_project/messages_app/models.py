@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from datetime import datetime, date, time
+from pygments.lexers import get_all_lexers
+from pygments.styles import get_all_styles
 # Create your models here.
 
 class Message(models.Model):
