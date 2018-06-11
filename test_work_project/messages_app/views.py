@@ -9,6 +9,13 @@ from rest_framework import viewsets
 from messages_app.serializers import MessageSerializer, UserSerializer, GroupSerializer
 
 
+
+from django.http.response import JsonResponse
+
+def hello_world(request):
+    return JsonResponse({"message":"hello world!"})
+
+
 # Create your views here.
 @csrf_exempt
 def message_list(request):

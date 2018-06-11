@@ -23,7 +23,7 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from messages_app.serializers import MessageSerializer, UserSerializer, GroupSerializer
 from messages_app.views import MessageViewSet, UserViewSet, GroupViewSet
-from messages_app.urls import urls
+from messages_app import urls
 
 
 # Serializers define the API representation.
@@ -54,7 +54,7 @@ urlpatterns = [
    # path('admin/', admin.site.urls),
    # url(r'^ login / $', auth_views.login),
    # url(r'^$', views.empty_page, name='empty_page'),
-	url(r'^api', include(urls)),
+	url(r'^api/', include(urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include(router.urls)),
     url(r'^', include('messages_app.urls')),
