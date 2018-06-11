@@ -10,10 +10,25 @@ from messages_app.serializers import MessageSerializer, UserSerializer, GroupSer
 
 
 
-from django.http.response import JsonResponse
+#from django.http.response import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 
+@api_view(["GET", "POST"])
+@permission_classes((permissions.AllowAny,))
 def hello_world(request):
-    return JsonResponse({"message":"hello world!"})
+    if request.method == "GET":
+        return Response({"message": "Hello World!"})
+
+    else:
+        name = request.data.get("name")
+        if not name:
+            return Response({"error": "No name passed"})
+        return Response({"message": "Hello {}!".format(name)})
+
+#def hello_world(request):
+#    return JsonResponse({"message":"hello world!"})
 
 
 # Create your views here.
