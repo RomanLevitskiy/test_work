@@ -1,9 +1,10 @@
-from django.conf.urls import url
-from messages_app import views
-from .views import HelloWorldView
+from rest_framework.routers import SimpleRouter
 
-urlpatterns = [
-    url(r'^hello', HelloWorldView.as_view(), name="hello_world"),
-    url(r'^messages/$', views.message_list),
-    url(r'^messages/(?P<pk>[0-9]+)/$', views.message_detail),
-]
+from .views import SubscriberViewSet, login
+
+router = SimpleRouter()
+router.register("messages", SubscriberViewSet)
+
+urlpatterns = router.urls
+
+#urlpatterns.append(url(r'^login', login))

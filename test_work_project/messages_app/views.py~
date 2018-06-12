@@ -1,106 +1,33 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from django.shortcuts import render
-from messages_app.models import Message
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from messages_app.serializers import MessageSerializer, UserSerializer, GroupSerializer
+from rest_framework.viewsets import ModelViewSet
+
+from .serializers import MessageSerializer
+from .models import Message
+from rest_framework.permissions import IsAuthenticated
 
 
 
-#from django.http.response import JsonResponse
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions
-
-@api_view(["GET", "POST"])
-@permission_classes((permissions.AllowAny,))
-def hello_world(request):
-    if request.method == "GET":
-        return Response({"message": "Hello World!"})
-
-    else:
-        name = request.data.get("name")
-        if not name:
-            return Response({"error": "No name passed"})
-        return Response({"message": "Hello {}!".format(name)})
-
-#def hello_world(request):
-#    return JsonResponse({"message":"hello world!"})
-
-
-# Create your views here.
-@csrf_exempt
-def message_list(request):
-    """
-    List all code messages.
-    """
-    if request.method == 'GET':
-        message = Message.objects.all()
-        serializer = MessageSerializer(message, many=True)
-        return JsonResponse(serializer.data, safe=false)
-    
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = MessageSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-
-@csrf_exempt
-def message_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        message = Message.objects.get(pk=pk)
-    except Message.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = MessageSerializer(message)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(message, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        message.delete()
-        return HttpResponse(status=204)
-
-
-def empty_page(request):
-    return render(request, 'messages_app/empty_page.html', {})
-
-
-class MessageViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows messages to be viewed
-    """
-    queryset = Message.objects.all()
+class SubscriberViewSet(ModelViewSet):
     serializer_class = MessageSerializer
+    queryset = Message.objects.all()
+    #permission_classes = (IsAuthenticated,)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework.authtoken.models import Token
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+@api_view(["POST"])
+def login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    user = authenticate(username=username, password=password)
+    if not user:
+        return Response({"error": "Login failed"}, status=HTTP_401_UNAUTHORIZED)
+
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({"token": token.key})
