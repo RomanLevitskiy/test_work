@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'test_work_project.urls'
@@ -116,6 +117,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
+
+SIMPLE_HISTORY_HISTORY_CHANGE_REASON_USE_TEXT_FIELD=True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -136,3 +141,4 @@ REST_FRAMEWORK = {
         #'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
