@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import djcelery
+djcelery.setup_loader()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'romanle.pythonanywhere.com']
 
-
+CELERYBEAT_SCHEDULER="djcelery.schedulers.DatabaseScheduler"
+CELERY_ALWAYS_EAGER=False
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +44,8 @@ INSTALLED_APPS = [
     'messages_app',
     'rest_framework',
     'simple_history',
+    'djcelery',
+    'djkombu',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +126,7 @@ USE_TZ = True
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
 SIMPLE_HISTORY_HISTORY_CHANGE_REASON_USE_TEXT_FIELD=True
+
 
 
 # Static files (CSS, JavaScript, Images)

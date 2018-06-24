@@ -14,6 +14,7 @@ class Message(models.Model):
     data_last_chenges=models.DateField("date chenges", auto_now=True)
     text_message=models.TextField(verbose_name="Text")
     history = HistoricalRecords()
+    
 
     def __str__(self):
         return self.text_message
