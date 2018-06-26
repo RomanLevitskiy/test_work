@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'messages_app',
     'rest_framework',
     'simple_history',
+    'django_celery_results',
 ]
+
+CELERY_RESULT_BACKEND = 'django-db'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
