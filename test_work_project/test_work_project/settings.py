@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,9 +42,23 @@ INSTALLED_APPS = [
     'rest_framework',
     'simple_history',
     'django_celery_results',
+    'django_celery_beat',
 ]
 
 CELERY_RESULT_BACKEND = 'django-db'
+#CELERY_BROKER_URL = 'redis://localhost:6379'
+#CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_BEAT_SCHEDULE = {
+    'task-number-one': {
+    'task': 'messages_app.tasks.task_number_one',
+    'schedule': crontab(minute=59, hour=23),
+    #'args': (*args)
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
