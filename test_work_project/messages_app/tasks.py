@@ -22,14 +22,10 @@ def test(arg):
     name="clear_old_messages",
     ignore_result=True
 )
-def clear_old_messages():
-    daysBeforDeleteMessages = 30
-    nowDate = datetime.datetime.now()
+def clear_old_history_messages():
+    days_old = 30
+    data_history_for_delete = datetime.datetime.now() - datetime.timedelta(days=days_old)
     requestMessages = Message.objects.all()
     for i in requestMessages:
-        #print("check now message:")
-        delta = nowDate.date() - i.data_create
-        if int(delta.days) > daysBeforDeleteMessages:
-            print("Delete message")
-            i.delete()
+        i.history.filter(history_date__lt=data_history_for_delete).delete()
             
