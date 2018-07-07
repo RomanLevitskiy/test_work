@@ -25,7 +25,6 @@ def test(arg):
 def clear_old_history_messages():
     days_old = 30
     data_history_for_delete = datetime.datetime.now() - datetime.timedelta(days=days_old)
-    requestMessages = Message.objects.all()
-    for i in requestMessages:
-        i.history.filter(history_date__lt=data_history_for_delete).delete()
+    record_history = Message.history
+    record_history.all().filter(history_date__lte=data_history_for_delete).delete()
             
